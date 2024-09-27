@@ -1,0 +1,72 @@
+<div class="form-container">
+  <img src="assets/amb.png" alt="Logo" class="logo">
+  <h2>CONSOLIDADO FACTORES TARIFARIOS</h2>
+
+  <form (ngSubmit)="onSubmit()" #consolidadoForm="ngForm">
+    <div class="form-section">
+      <h3>Información General</h3>
+      <div class="form-group">
+        <label for="empresa">EMPRESA:</label>
+        <input type="text" id="empresa" name="empresa" [value]="usuario.empresa" readonly>
+      </div>
+
+      <div class="form-group form-group-inline">
+        <label for="periodo">Periodo:</label>
+        <select id="periodo" name="periodo" [(ngModel)]="usuario.periodo" (change)="onPeriodoChange($event)" required>
+          <option *ngFor="let periodo of periodos" [value]="periodo.PERIODO">{{ periodo.PERIODO }}</option>
+        </select>
+
+        <label for="fechaInicio">Fecha Inicio:</label>
+        <input type="text" id="fechaInicio" name="fechaInicio" [(ngModel)]="fechaInicio" class="fecha-input" readonly>
+
+        <label for="fechaFinal">Fecha Final:</label>
+        <input type="text" id="fechaFinal" name="fechaFinal" [(ngModel)]="fechaFinal" class="fecha-input" readonly>
+
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3>MOVILIZACIÓN EN EL PERIODO</h3>
+      <div class="form-group">
+        <label for="reporteEntradas">REPORTE ENTRADAS DE PASAJEROS MEDIDOS POR LA PUERTA DELANTERA Y TRASERA(A):</label>
+        <input type="number" id="reporteEntradas" name="reporteEntradas" [(ngModel)]="movilizacion.reporteEntradas"
+          (ngModelChange)="updateCalculations()" required>
+      </div>
+      <div class="form-group">
+        <label for="noNovedades">NUMERO DE NOVEDADES:</label>
+        <input type="number" id="noNovedades" name="noNovedades" [(ngModel)]="movilizacion.noNovedades"
+          (ngModelChange)="updateCalculations()" required>
+      </div>
+      <div class="form-group">
+        <label for="baseLiquidacion">BASE DE LIQUIDACIÓN :</label>
+        <input type="text" id="baseLiquidacion" name="baseLiquidacion"
+          [value]="formatAsCurrency(movilizacion.baseLiquidacion)" readonly>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3>LIQUIDACIÓN</h3>
+      <div class="form-group">
+        <label for="aportesFet">APORTES FET:</label>
+        <input type="text" id="aportesFet" name="aportesFet" [value]="formatAsCurrency(liquidation.aportesFet)"
+          readonly>
+      </div>
+      <div class="form-group">
+        <label for="aportesFQ">APORTES FQ:</label>
+        <input type="text" id="aportesFQ" name="aportesFQ" [value]="formatAsCurrency(liquidation.aportesFQ)" readonly>
+      </div>
+      <div class="form-group">
+        <label for="aportesAMB">APORTES AMBQ:</label>
+        <input type="text" id="aportesAMB" name="aportesAMB" [value]="formatAsCurrency(liquidation.aportesAMB)"
+          readonly>
+      </div>
+      <div class="form-group">
+        <label for="total">TOTAL:</label>
+        <input type="text" id="total" name="total" [value]="formatAsCurrency(liquidation.total)" readonly>
+      </div>
+    </div>
+
+    <button type="submit"
+      [disabled]="!consolidadoForm.valid || !movilizacion.reporteEntradas || !movilizacion.noNovedades">Enviar</button>
+  </form>
+</div>

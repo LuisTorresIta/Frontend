@@ -1,0 +1,20 @@
+<nav class="navbar"> 
+  <ul class="nav-links">
+    <li><a routerLink="/home">Home</a></li>
+    <li><a routerLink="/liquidation">Liquidation</a></li>
+    <li>
+      <a (click)="toggleUserInfo()" class="user-icon">
+        <i class="bi bi-person-circle"></i>
+      </a>
+      <div *ngIf="showUserInfo" class="user-info">
+        <p class="user-name">{{ currentUser?.usuario }}</p>
+        <p class="company-name">{{ currentUser?.empresa }}</p>
+        <hr>
+        <div class="action-buttons">
+          <button (click)="goToChangePassword()" class="action-button">Cambiar Contraseña</button>
+          <button (click)="logout()" class="logout-button action-button">Logout</button>
+        </div>
+      </div>
+    </li>
+  </ul>
+</nav>
