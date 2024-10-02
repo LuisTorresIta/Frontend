@@ -17,6 +17,9 @@ export class LiquidationComponent implements OnInit {
   fechaInicio: string = '';
   fechaFinal: string = '';
   isFormSubmitted: boolean = false;
+  invoiceNumber1 = '0000000004';  
+  invoiceNumber2 = '0000000005';  
+  invoiceNumber3 = '0000000006';  
 
   usuario = {
     empresa: '',
@@ -111,16 +114,52 @@ export class LiquidationComponent implements OnInit {
 
   logo: string = 'assets/amb.png';
 
+  // onSubmit() {
+  //   if (this.isFormSubmitted) {
+  //     return;
+  //   }
+  //   if (this.validateData()) {
+  //     this.generatePDF();
+  //     this.generatePDF2();
+  //     this.generatePDF3();
+  //   }
+  // }
+
   onSubmit() {
     if (this.isFormSubmitted) {
       return;
     }
+    
     if (this.validateData()) {
-      this.generatePDF();
-      this.generatePDF2();
-      this.generatePDF3();
+      // Recopilar los datos del formulario
+      const usuarioLogueado = this.authService.getUsuarioLogueado();
+      const registroData = {
+        usuario: usuarioLogueado,
+        aportesFet: this.liquidation.aportesFet,
+        aportesFQ: this.liquidation.aportesFQ,
+        aportesAMB: this.liquidation.aportesAMB,
+        fechaEmision: this.fechaEmision,
+        numeroFacturaPDF1: this.invoiceNumber1, 
+        numeroFacturaPDF2: this.invoiceNumber2,  
+        numeroFacturaPDF3: this.invoiceNumber3   
+      };
+  
+    
+      this.authService.saveRecord(registroData).subscribe(
+        (response) => {
+          console.log('Registro guardado exitosamente:', response);
+      
+          this.generatePDF();
+          this.generatePDF2();
+          this.generatePDF3();
+        },
+        (error) => {
+          console.error('Error guardando el registro:', error);
+        }
+      );
     }
   }
+  
 
   generatePDF() {
     this.http.get('assets/invoice-template.html', { responseType: 'text' })
@@ -290,6 +329,9 @@ export class LiquidationComponent implements OnInit {
     filledTemplate = filledTemplate.replace('{{logo}}', this.logo);
     filledTemplate = filledTemplate.replace('{{empresa}}', this.usuario.empresa);
     filledTemplate = filledTemplate.replace('{{periodo}}', this.usuario.periodo);
+    filledTemplate = filledTemplate.replace('{{invoiceNumber1}}', this.invoiceNumber1);
+    filledTemplate = filledTemplate.replace('{{invoiceNumber2}}', this.invoiceNumber2);
+    filledTemplate = filledTemplate.replace('{{invoiceNumber3}}', this.invoiceNumber3);
     filledTemplate = filledTemplate.replace('{{fechaEmision}}', this.fechaEmision.toLocaleDateString());
     filledTemplate = filledTemplate.replace('{{fechaVencimiento}}', this.fechaVencimiento.toLocaleDateString())
     filledTemplate = filledTemplate.replace('{{reporteEntradas}}', this.formatAsCurrency(this.movilizacion.reporteEntradas));
