@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import html2canvas from 'html2canvas';
 import * as JsBarcode from 'jsbarcode';
 import jsPDF from 'jspdf';
@@ -12,14 +13,16 @@ import { AuthService } from 'src/app/shared/auth.service';
   styleUrls: ['./liquidation.component.css']
 })
 export class LiquidationComponent implements OnInit {
+  @ViewChild('consolidadoForm') consolidadoForm!: NgForm;
   periodos: any[] = [];
   periodoSeleccionado: any;
   fechaInicio: string = '';
   fechaFinal: string = '';
   isFormSubmitted: boolean = false;
-  invoiceNumber1 = '0000000004';  
-  invoiceNumber2 = '0000000005';  
-  invoiceNumber3 = '0000000006';  
+  invoiceNumber1 = '0000000020';  
+  invoiceNumber2 = '0000000021';  
+  invoiceNumber3 = '0000000022';  
+  successMessage: string = '';
 
   usuario = {
     empresa: '',
@@ -148,10 +151,15 @@ export class LiquidationComponent implements OnInit {
       this.authService.saveRecord(registroData).subscribe(
         (response) => {
           console.log('Registro guardado exitosamente:', response);
+          this.successMessage = 'Información guardada en la base de datos.';
       
           this.generatePDF();
           this.generatePDF2();
           this.generatePDF3();
+            // Ocultar el mensaje después de 5 segundos
+            setTimeout(() => {
+              this.successMessage = '';
+            }, 5000);
         },
         (error) => {
           console.error('Error guardando el registro:', error);

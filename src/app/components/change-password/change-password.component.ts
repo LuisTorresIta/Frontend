@@ -1,6 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { ChangePasswordPayload, ChangePasswordResponse } from 'src/app/models/user.model';
 import { AuthService } from 'src/app/shared/auth.service';
 
 @Component({
@@ -40,9 +41,15 @@ export class ChangePasswordComponent {
       return;
     }
 
-    this.authService.changePassword(this.currentUser.usuario, this.currentPassword, this.newPassword)
+    const payload: ChangePasswordPayload = {
+      usuario: this.currentUser.usuario,
+      currentPassword: this.currentPassword,
+      newPassword: this.newPassword
+    };
+
+    this.authService.changePassword(payload)
       .subscribe({
-        next: (response: any) => {
+        next: (response: ChangePasswordResponse) => {
           this.successMessage = response.message || 'Contraseña cambiada exitosamente';
           setTimeout(() => {
             this.router.navigate(['/login']);
@@ -51,11 +58,12 @@ export class ChangePasswordComponent {
         error: (error: HttpErrorResponse) => {
           console.error('Error al cambiar la contraseña:', error);
           if (error.status === 400) {
-            this.errorMessage = error.error.message || 'La contraseña actual es incorrecta.';
+            this.errorMessage = error.error?.message || 'La contraseña actual es incorrecta.';
           } else {
-            this.errorMessage = 'Error al cambiar la contraseña: ' + (error.error.message || error.message);
+            this.errorMessage = 'Error al cambiar la contraseña: ' + (error.error?.message || error.message);
           }
         }
       });
   }
+
 }

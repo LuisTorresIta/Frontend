@@ -2,6 +2,11 @@
   <img src="assets/amb.png" alt="Logo" class="logo">
   <h2>CONSOLIDADO FACTORES TARIFARIOS</h2>
 
+    <!-- Mensaje de éxito -->
+    <div *ngIf="successMessage" class="alert alert-success">
+      {{ successMessage }}
+    </div>
+
   <form (ngSubmit)="onSubmit()" #consolidadoForm="ngForm">
     <div class="form-section">
       <h3>Información General</h3>

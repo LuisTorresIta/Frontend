@@ -1,24 +1,27 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, tap, throwError } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { Usuario, LoginResponse, ChangePasswordPayload, ChangePasswordResponse } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private isLoggedIn: boolean = false;
-  private usuarioLogueado: any = null;
-  private usuarioSubject = new BehaviorSubject<any>(null);
+  private isLoggedIn = false;
+  private usuarioLogueado: Usuario | null = null;
+  private readonly usuarioSubject = new BehaviorSubject<Usuario | null>(null);
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    this.loadUserFromLocalStorage();
+  }
 
-  login(usuario: string, clave: string): Observable<any> {
-    const headers = { 'Content-Type': 'application/json' };
-    const body = JSON.stringify({ usuario, clave });
+  login(usuario: string, clave: string): Observable<LoginResponse> {
+    const body = { usuario, clave };
 
-    return this.http.post('http://localhost:3000/login', body, { headers })
+    return this.http.post<LoginResponse>(`${environment.apiUrl}/login`, body)
       .pipe(
-        tap((response: any) => {
+        tap(response => {
           if (response.message === 'Login successful') {
             this.isLoggedIn = true;
             this.usuarioLogueado = {
@@ -27,15 +30,14 @@ export class AuthService {
             };
 
             localStorage.setItem('currentUser', JSON.stringify(this.usuarioLogueado));
-
             this.usuarioSubject.next(this.usuarioLogueado);
-            console.log('Usuario logueado:', this.usuarioLogueado);
           }
-        })
+        }),
+        catchError(this.handleError)
       );
   }
 
-  logout() {
+  logout(): void {
     this.isLoggedIn = false;
     this.usuarioLogueado = null;
     localStorage.removeItem('currentUser');
@@ -46,49 +48,69 @@ export class AuthService {
     return this.isLoggedIn;
   }
 
-  getUsuarioLogueado() {
-    if (!this.usuarioLogueado) {
-      this.usuarioLogueado = JSON.parse(localStorage.getItem('currentUser') || 'null');
-    }
+  getUsuarioLogueado(): Usuario | null {
     return this.usuarioLogueado;
   }
 
-  getUsuarioObservable(): Observable<any> {
+  getUsuarioObservable(): Observable<Usuario | null> {
     return this.usuarioSubject.asObservable();
   }
 
   getPeriodos(): Observable<any> {
-    return this.http.get('http://localhost:3000/periodos');
-  }
-
-  changePassword(usuario: string, currentPassword: string, newPassword: string): Observable<any> {
-    const payload = {
-      usuario: usuario,
-      currentPassword: currentPassword,
-      newPassword: newPassword
-    };
-
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
-
-    return this.http.post('http://localhost:3000/change-password', payload, { headers })
+    return this.http.get<any>(`${environment.apiUrl}/periodos`)
       .pipe(
-        catchError((error: HttpErrorResponse) => {
-          let errorMessage = 'Error desconocido';
-          if (error.error && error.error.message) {
-            errorMessage = error.error.message;
-          } else if (error.message) {
-            errorMessage = error.message;
-          }
-          return throwError(() => new Error(errorMessage));
-        })
+        catchError(this.handleError)
       );
   }
 
-  saveRecord(data: any) {
-    return this.http.post('http://localhost:3000/saveRecord', data);
+  changePassword(payload: ChangePasswordPayload): Observable<ChangePasswordResponse> {
+    return this.http.post<ChangePasswordResponse>(`${environment.apiUrl}/change-password`, payload)
+      .pipe(
+        tap(response => {
+          console.log(response);
+          if (response.message === 'Contraseña cambiada exitosamente') {
+            this.logout();
+
+          }
+        }),
+        catchError(this.handleError)
+      );
   }
 
+
+  saveRecord(data: any): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}/saveRecord`, data)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  private loadUserFromLocalStorage(): void {
+    const storedUser = localStorage.getItem('currentUser');
+    if (storedUser) {
+      this.usuarioLogueado = JSON.parse(storedUser);
+      this.isLoggedIn = true;
+      this.usuarioSubject.next(this.usuarioLogueado);
+    }
+  }
+
+  private handleError(error: HttpErrorResponse): Observable<never> {
+    let errorMessage = 'Error desconocido';
+    if (error.error instanceof ErrorEvent) {
+      // Error del cliente
+      errorMessage = `Error: ${error.error.message}`;
+    } else if (error.error && error.error.message) {
+      // Error del servidor 
+      errorMessage = error.error.message;
+    } else {
+      // Otros errores
+      errorMessage = `Código de error: ${error.status}\nMensaje: ${error.message}`;
+    }
+    
+    return throwError(() => ({
+      status: error.status,
+      message: errorMessage
+    }));
+  }
 
 }
