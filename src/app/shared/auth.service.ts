@@ -19,7 +19,7 @@ export class AuthService {
   login(usuario: string, clave: string): Observable<LoginResponse> {
     const body = { usuario, clave };
 
-    return this.http.post<LoginResponse>(`${environment.apiUrl}/login`, body)
+    return this.http.post<LoginResponse>(`${environment.apiUrl}/auth/login`, body)
       .pipe(
         tap(response => {
           if (response.message === 'Login successful') {
@@ -64,7 +64,7 @@ export class AuthService {
   }
 
   changePassword(payload: ChangePasswordPayload): Observable<ChangePasswordResponse> {
-    return this.http.post<ChangePasswordResponse>(`${environment.apiUrl}/change-password`, payload)
+    return this.http.post<ChangePasswordResponse>(`${environment.apiUrl}/auth/change-password`, payload)
       .pipe(
         tap(response => {
           console.log(response);

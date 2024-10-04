@@ -19,9 +19,9 @@ export class LiquidationComponent implements OnInit {
   fechaInicio: string = '';
   fechaFinal: string = '';
   isFormSubmitted: boolean = false;
-  invoiceNumber1 = '0000000020';  
-  invoiceNumber2 = '0000000021';  
-  invoiceNumber3 = '0000000022';  
+  invoiceNumber1 = '0000000023';  
+  invoiceNumber2 = '0000000024';  
+  invoiceNumber3 = '0000000025';  
   successMessage: string = '';
 
   usuario = {
