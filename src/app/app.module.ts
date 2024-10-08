@@ -11,6 +11,8 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { LoginComponent } from './components/login/login.component';
 import { ChangePasswordComponent } from './components/change-password/change-password.component';
 import { HttpHeadersInterceptor } from './interceptors/http.interceptor';
+import { EstadoDeCuentaComponent } from './components/estado-de-cuenta/estado-de-cuenta.component';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @NgModule({
   declarations: [
@@ -19,13 +21,15 @@ import { HttpHeadersInterceptor } from './interceptors/http.interceptor';
     LiquidationComponent,
     NavbarComponent,
     LoginComponent,
-    ChangePasswordComponent
+    ChangePasswordComponent,
+    EstadoDeCuentaComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpClientModule,
-    AppRoutingModule
+    AppRoutingModule,
+    NgxPaginationModule
   ],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: HttpHeadersInterceptor, multi: true }],
   bootstrap: [AppComponent]

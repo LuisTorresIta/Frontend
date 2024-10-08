@@ -32,6 +32,11 @@
       <small>{{ errorMessage }}</small>
     </div>
 
-    <button type="submit">Login</button>
+    <div *ngIf="isLoading" class="loading-indicator">
+      Cargando, por favor espera...
+
+    </div>
+
+    <button type="submit" [disabled]="isLoading">Login</button>
   </form>
 </div>

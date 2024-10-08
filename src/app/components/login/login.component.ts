@@ -13,6 +13,7 @@ export class LoginComponent {
   submitted: boolean = false;
   errorMessage: string = '';
   showPassword: boolean = false;
+  isLoading: boolean = false;
 
   constructor(private router: Router, private authService: AuthService) { }
 
@@ -22,19 +23,24 @@ export class LoginComponent {
 
   onSubmit() {
     this.submitted = true;
+    this.errorMessage = '';
+    this.isLoading = true;
 
     if (!this.usuario) {
       this.errorMessage = 'Usuario is required.';
+      this.isLoading = false;
       return;
     }
 
     if (!this.clave) {
       this.errorMessage = 'Clave is required.';
+      this.isLoading = false;
       return;
     }
 
     this.authService.login(this.usuario, this.clave).subscribe({
       next: (response) => {
+        this.isLoading = false;
         if (response.message === 'Login successful') {
           console.log('Login successful, redirecting...');
           this.router.navigate(['/liquidation']);
@@ -43,6 +49,7 @@ export class LoginComponent {
         }
       },
       error: (err) => {
+        this.isLoading = false;
         console.error('Error during login:', err);
         if (err.status === 401) {
           this.errorMessage = 'Credenciales inválidas';

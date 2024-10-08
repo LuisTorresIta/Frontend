@@ -1,0 +1,64 @@
+<div class="estado-cuenta-container"> 
+  <div class="empresa-info">
+    <label>Empresa: </label>
+    <span>{{ currentUser.empresa }}</span>
+  </div>
+
+  <div class="fechas-container">
+    <div class="fechas">
+      <label for="fechaInicio">Fecha Inicio:</label>
+      <select id="fechaInicio" [(ngModel)]="fechaInicioSeleccionada" (change)="calcularPeriodo()">
+        <option [ngValue]="null" disabled selected>Seleccionar fecha</option>
+        <option *ngFor="let fecha of fechasDisponibles" [value]="fecha">{{ fecha }}</option>
+      </select>
+    </div>
+
+    <div class="fechas">
+      <label for="fechaFinal">Fecha Final:</label>
+      <select id="fechaFinal" [(ngModel)]="fechaFinalSeleccionada" (change)="calcularPeriodo()">
+        <option [ngValue]="null" disabled selected>Seleccionar fecha</option>
+        <option *ngFor="let fecha of fechasDisponibles" [value]="fecha">{{ fecha }}</option>
+      </select>
+    </div>
+
+    <button class="consultar-btn" (click)="consultarRegistros()">Consultar</button>
+  </div>
+</div>
+
+<div class="estado-cuenta-table-container">
+  <table class="estado-cuenta-table">
+    <thead>
+      <tr>
+        <th>Periodo</th>
+        <th>Concepto</th>
+        <th>Número Recibo</th>
+        <th>Total</th>
+        <th>Fecha Pagado</th>
+        <th>Valor Pagado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngIf="registrosFiltrados.length === 0">
+        <td colspan="6" class="no-data-message">No hay datos para mostrar</td>
+      </tr>
+      <tr *ngFor="let item of registrosFiltrados | paginate: { itemsPerPage: registrosPorPagina, currentPage: paginaActual }">
+        <td>{{ periodo }}</td>
+        <td>{{ item.concepto }}</td>
+        <td>{{ item.numeroRecibo }}</td>
+        <td>{{ item.total | currency }}</td>
+        <td>{{ item.fechaPagado | date:'dd/MM/yyyy' }}</td>
+        <td>{{ item.valorPagado | currency }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="pagination-container">
+    <pagination-controls 
+      (pageChange)="paginaActual = $event"
+      [maxSize]="5" 
+      [autoHide]="true" 
+      previousLabel="Anterior" 
+      nextLabel="Siguiente">
+    </pagination-controls>
+  </div>
+</div>

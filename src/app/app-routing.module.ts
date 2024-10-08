@@ -5,10 +5,12 @@ import { LiquidationComponent } from './components/liquidation/liquidation.compo
 import { LoginComponent } from './components/login/login.component';
 import { AuthGuard } from './guards/auth.guard';
 import { ChangePasswordComponent } from './components/change-password/change-password.component';
+import { EstadoDeCuentaComponent } from './components/estado-de-cuenta/estado-de-cuenta.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'liquidation', component: LiquidationComponent, canActivate: [AuthGuard] },  
+  { path: 'estado-de-cuenta', component: EstadoDeCuentaComponent, canActivate: [AuthGuard]},
   { path: 'login', component: LoginComponent },
   { path: 'change-password', component: ChangePasswordComponent, canActivate: [AuthGuard] },
   { path: '', redirectTo: '/login', pathMatch: 'full' }, 
