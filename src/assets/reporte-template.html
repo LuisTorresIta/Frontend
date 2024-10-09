@@ -6,6 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reporte de Estado de Cuenta</title>
     <style>
+        .font-arial {
+            font-family: Arial, sans-serif;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -70,13 +74,6 @@
             padding: 0.02in;
         }
 
-        .footer {
-            background-color: #f4f4f4;
-            text-align: center;
-            padding: 10px;
-            font-size: 8pt;
-        }
-
         .no-border-table th,
         .no-border-table td {
             border: none;
@@ -86,12 +83,16 @@
             font-size: 8pt;
 
         }
+
+        .header-padding th {
+            padding: 3px;
+        }
     </style>
 </head>
 
 <body>
 
-    <table class="header-table">
+    <table class="header-table font-arial">
         <colgroup>
             <col style="width: 20%;" />
             <col style="width: 60%;" />
@@ -112,7 +113,7 @@
         </tr>
     </table>
 
-    <table class="section-header">
+    <table class="section-header font-arial">
         <tr>
             <td>
                 <span>INFORMACION GENERAL</span>
@@ -120,7 +121,7 @@
         </tr>
     </table>
 
-    <table>
+    <table class="font-arial">
         <thead>
             <tr>
                 <th class="header">EMPRESA</th>
@@ -138,8 +139,8 @@
             </tr>
         </tbody>
     </table>
-
-    <table class="section-header">
+    <br>
+    <table class="section-header font-arial">
         <tr>
             <td>
                 <span>ESTADO DE CUENTA</span>
@@ -147,7 +148,7 @@
         </tr>
     </table>
 
-    <table class="no-border-table">
+    <table class="no-border-table font-arial header-padding">
         <thead>
             <tr>
                 <th class="header">CONCEPTO</th>
