@@ -99,6 +99,19 @@ select {
   transition: background-color 0.3s; 
 }
 
+.fecha-input {
+  padding: 6px;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px; 
+  transition: border-color 0.3s; 
+}
+
+.fecha-input:focus {
+  border-color: #0056b3; 
+  outline: none;
+}
+
 .pagination button:hover {
   background-color: #45a049; 
 }

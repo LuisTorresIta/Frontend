@@ -19,3 +19,11 @@ export interface ChangePasswordResponse {
     message: string;
   }
   
+  
+export interface Periodo {
+    ID: number;
+    PERIODO: string; 
+    FECHA_INICIO: string;
+    FECHA_FINAL: string;
+  }
+  
