@@ -6,37 +6,22 @@
     <br><br><br>
 
     <div class="form-group">
-      <label for="username">Username</label>
+      <label for="username">Usuario</label>
       <input type="text" id="username" name="username" [(ngModel)]="usuario" #usernameInput="ngModel" required
-        placeholder="Enter your username" />
-      <div *ngIf="submitted && !usuario" class="error">
-        <small>Username is required.</small>
-      </div>
+        placeholder="Ingresa tu usuario" />
     </div>
 
     <div class="form-group">
-      <label for="password">Password</label>
+      <label for="password">Contraseña</label>
       <div class="password-container">
         <input [type]="showPassword ? 'text' : 'password'" id="clave" name="clave" [(ngModel)]="clave"
-          #claveInput="ngModel" required placeholder="Enter your clave" />
+          #claveInput="ngModel" required placeholder="Ingresa tu contraseña" />
         <span class="eye-icon" (click)="togglePasswordVisibility()">
           <i class="bi" [ngClass]="showPassword ? 'bi-eye' : 'bi-eye-slash'"></i>
         </span>
       </div>
-      <div *ngIf="submitted && !clave" class="error">
-        <small>Clave is required.</small>
-      </div>
     </div>
 
-    <div *ngIf="errorMessage" class="error-message">
-      <small>{{ errorMessage }}</small>
-    </div>
-
-    <div *ngIf="isLoading" class="loading-indicator">
-      Cargando, por favor espera...
-
-    </div>
-
-    <button type="submit" [disabled]="isLoading">Login</button>
+    <button type="submit">Ingresar</button>
   </form>
 </div>

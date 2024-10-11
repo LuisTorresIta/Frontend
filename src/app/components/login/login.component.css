@@ -49,12 +49,6 @@ input:focus {
   box-shadow: 0 0 8px rgba(0, 123, 255, 0.25);
 }
 
-.error {
-  color: red;
-  font-size: 0.9rem;
-  margin-top: 0.5rem;
-}
-
 button {
   width: 100%;
   padding: 0.75rem;
@@ -69,18 +63,6 @@ button {
 
 button:hover {
   background-color: #0056b3;
-}
-
-.error-message {
-  color: #ff4d4d;
-  font-size: 20px;
-  text-align: center;
-  margin-top: 15px;
-  margin-bottom: 15PX;
-}
-
-.error-message small {
-  font-size: 20px;
 }
 
 .password-container {
@@ -101,23 +83,12 @@ button:hover {
   font-size: 18px;
 }
 
-.loading-spinner {
-  display: flex;
-  justify-content: center;
-  margin-top: 10px;
+::ng-deep .custom-toast .toast-title {
+  font-size: 30px;
+  font-weight: normal !important;
+  margin-bottom: 10px !important;
 }
 
-.spinner-border {
-  width: 3rem;
-  height: 3rem;
-  border: 0.25em solid currentColor;
-  border-right-color: transparent;
-  border-radius: 50%;
-  animation: spinner-border 0.75s linear infinite;
-}
-
-@keyframes spinner-border {
-  100% {
-    transform: rotate(360deg);
-  }
+::ng-deep .custom-toast .toast-message {
+  font-size: 18px !important;
 }

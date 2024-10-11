@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/shared/auth.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -10,54 +11,68 @@ import { AuthService } from 'src/app/shared/auth.service';
 export class LoginComponent {
   usuario: string = '';
   clave: string = '';
-  submitted: boolean = false;
-  errorMessage: string = '';
   showPassword: boolean = false;
-  isLoading: boolean = false;
+  validatingToastId: number | null = null;
 
-  constructor(private router: Router, private authService: AuthService) { }
+  constructor(private router: Router, private authService: AuthService, private toastr: ToastrService) { }
 
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
   }
 
   onSubmit() {
-    this.submitted = true;
-    this.errorMessage = '';
-    this.isLoading = true;
-
-    if (!this.usuario) {
-      this.errorMessage = 'Usuario is required.';
-      this.isLoading = false;
+    if (!this.usuario || !this.clave) {
+      this.toastr.warning(!this.usuario ? 'Por favor ingrese su usuario' : 'Por favor ingrese su contraseña', '', {
+        toastClass: 'ngx-toastr custom-toast'
+      });
       return;
     }
 
-    if (!this.clave) {
-      this.errorMessage = 'Clave is required.';
-      this.isLoading = false;
-      return;
+    // Si hay una notificación de validación activa la cerramos
+    if (this.validatingToastId) {
+      this.toastr.clear(this.validatingToastId);
     }
+
+    this.validatingToastId = this.toastr.info('Validando información...', 'Procesando', {
+      disableTimeOut: true,
+      closeButton: false,
+      toastClass: 'ngx-toastr custom-toast'
+    }).toastId;
 
     this.authService.login(this.usuario, this.clave).subscribe({
       next: (response) => {
-        this.isLoading = false;
+        if (this.validatingToastId !== null) {
+          this.toastr.clear(this.validatingToastId);
+          this.validatingToastId = null;
+        }
+
         if (response.message === 'Login successful') {
-          console.log('Login successful, redirecting...');
+          this.toastr.success('Inicio de sesión exitoso.', 'Bienvenido', {
+            toastClass: 'ngx-toastr custom-toast'
+          });
           this.router.navigate(['/liquidation']);
         } else {
-          this.errorMessage = 'Invalid credentials';
+          this.toastr.error('La información ingresada no es correcta, por favor intente de nuevo.', 'Error', {
+            toastClass: 'ngx-toastr custom-toast'
+          });
         }
       },
       error: (err) => {
-        this.isLoading = false;
-        console.error('Error during login:', err);
+        if (this.validatingToastId !== null) {
+          this.toastr.clear(this.validatingToastId);
+          this.validatingToastId = null;
+        }
+
         if (err.status === 401) {
-          this.errorMessage = 'Credenciales inválidas';
+          this.toastr.error('La información ingresada no es correcta, por favor intente de nuevo.', 'Error', {
+            toastClass: 'ngx-toastr custom-toast'
+          });
         } else {
-          this.errorMessage = 'Error durante el inicio de sesión';
+          this.toastr.error('Error durante el inicio de sesión', 'Error', {
+            toastClass: 'ngx-toastr custom-toast'
+          });
         }
       }
     });
   }
-
 }
