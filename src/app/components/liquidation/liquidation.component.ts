@@ -19,9 +19,9 @@ export class LiquidationComponent implements OnInit {
   fechaInicio: string = '';
   fechaFinal: string = '';
   isFormSubmitted: boolean = false;
-  invoiceNumber1 = '0000000023';  
-  invoiceNumber2 = '0000000024';  
-  invoiceNumber3 = '0000000025';  
+  invoiceNumber1 = '0000000023';
+  invoiceNumber2 = '0000000024';
+  invoiceNumber3 = '0000000025';
   successMessage: string = '';
 
   usuario = {
@@ -96,6 +96,10 @@ export class LiquidationComponent implements OnInit {
     return `$ ${value.toLocaleString('es-CO')}`;
   }
 
+  formatAsThousands(value: number): string {
+    return value.toLocaleString('es-CO');
+  }
+
   onPeriodoChange(event: any) {
     const periodoSeleccionado = event.target.value;
     const periodo = this.periodos.find(p => p.PERIODO.toString() === periodoSeleccionado);
@@ -117,22 +121,11 @@ export class LiquidationComponent implements OnInit {
 
   logo: string = 'assets/amb.png';
 
-  // onSubmit() {
-  //   if (this.isFormSubmitted) {
-  //     return;
-  //   }
-  //   if (this.validateData()) {
-  //     this.generatePDF();
-  //     this.generatePDF2();
-  //     this.generatePDF3();
-  //   }
-  // }
-
   onSubmit() {
     if (this.isFormSubmitted) {
       return;
     }
-    
+
     if (this.validateData()) {
       // Recopilar los datos del formulario
       const usuarioLogueado = this.authService.getUsuarioLogueado();
@@ -142,24 +135,24 @@ export class LiquidationComponent implements OnInit {
         aportesFQ: this.liquidation.aportesFQ,
         aportesAMB: this.liquidation.aportesAMB,
         fechaEmision: this.fechaEmision,
-        numeroFacturaPDF1: this.invoiceNumber1, 
-        numeroFacturaPDF2: this.invoiceNumber2,  
-        numeroFacturaPDF3: this.invoiceNumber3   
+        numeroFacturaPDF1: this.invoiceNumber1,
+        numeroFacturaPDF2: this.invoiceNumber2,
+        numeroFacturaPDF3: this.invoiceNumber3
       };
-  
-    
+
+
       this.authService.saveRecord(registroData).subscribe(
         (response) => {
           console.log('Registro guardado exitosamente:', response);
           this.successMessage = 'Información guardada en la base de datos.';
-      
+
           this.generatePDF();
           this.generatePDF2();
           this.generatePDF3();
-            // Ocultar el mensaje después de 5 segundos
-            setTimeout(() => {
-              this.successMessage = '';
-            }, 5000);
+          // Ocultar el mensaje después de 5 segundos
+          setTimeout(() => {
+            this.successMessage = '';
+          }, 5000);
         },
         (error) => {
           console.error('Error guardando el registro:', error);
@@ -167,7 +160,7 @@ export class LiquidationComponent implements OnInit {
       );
     }
   }
-  
+
 
   generatePDF() {
     this.http.get('assets/invoice-template.html', { responseType: 'text' })
@@ -342,9 +335,9 @@ export class LiquidationComponent implements OnInit {
     filledTemplate = filledTemplate.replace('{{invoiceNumber3}}', this.invoiceNumber3);
     filledTemplate = filledTemplate.replace('{{fechaEmision}}', this.fechaEmision.toLocaleDateString());
     filledTemplate = filledTemplate.replace('{{fechaVencimiento}}', this.fechaVencimiento.toLocaleDateString())
-    filledTemplate = filledTemplate.replace('{{reporteEntradas}}', this.formatAsCurrency(this.movilizacion.reporteEntradas));
-    filledTemplate = filledTemplate.replace('{{noNovedades}}', this.formatAsCurrency(this.movilizacion.noNovedades));
-    filledTemplate = filledTemplate.replace('{{baseLiquidacion}}', this.formatAsCurrency(this.movilizacion.baseLiquidacion));
+    filledTemplate = filledTemplate.replace('{{reporteEntradas}}', this.movilizacion.reporteEntradas.toLocaleString('es-CO'));
+    filledTemplate = filledTemplate.replace('{{noNovedades}}', this.movilizacion.noNovedades.toLocaleString('es-CO'));
+    filledTemplate = filledTemplate.replace('{{baseLiquidacion}}', this.movilizacion.baseLiquidacion.toLocaleString('es-CO'));
     filledTemplate = filledTemplate.replace('{{aportesFet}}', this.formatAsCurrency(this.liquidation.aportesFet));
     filledTemplate = filledTemplate.replace('{{aportesFQ}}', this.formatAsCurrency(this.liquidation.aportesFQ));
     filledTemplate = filledTemplate.replace('{{aportesAMB}}', this.formatAsCurrency(this.liquidation.aportesAMB));
