@@ -23,7 +23,11 @@ export class LiquidationComponent implements OnInit {
   invoiceNumber2 = '0000000024';
   invoiceNumber3 = '0000000025';
   successMessage: string = '';
-
+  porcentajeLimite: number | undefined;
+  aportesFetFactor: number | undefined;
+  aportesFQFactor: number | undefined;
+  aportesAMBQFactor: number | undefined;
+  
   usuario = {
     empresa: '',
     periodo: ''
@@ -53,6 +57,14 @@ export class LiquidationComponent implements OnInit {
     this.authService.getPeriodos().subscribe((data: any) => {
       this.periodos = data;
     });
+
+     this.authService.getParametros().subscribe((data: any) => {
+      console.log(data); 
+      this.porcentajeLimite = data['porcentajeLimite']; 
+      this.aportesFetFactor = data['aportesFetFactor'];
+      this.aportesFQFactor = data['aportesFQFactor'];
+      this.aportesAMBQFactor = data['aportesAMBQFactor'];
+    });
   }
 
   loadUserData() {
@@ -62,12 +74,10 @@ export class LiquidationComponent implements OnInit {
     }
   }
 
-  porcentajeLimite: number = 0.13;
-
   validateData(): boolean {
     const { reporteEntradas, baseLiquidacion } = this.movilizacion;
     const diferencia = reporteEntradas - baseLiquidacion;
-    const limite = this.porcentajeLimite * reporteEntradas;
+    const limite = (this.porcentajeLimite || 0) * reporteEntradas;
 
     if (diferencia > limite) {
       alert('Verifique su información.');
@@ -85,9 +95,9 @@ export class LiquidationComponent implements OnInit {
   // Método para calcular los valores de los campos en la sección Liquidacion
   calculateLiqFields() {
     const campo3 = this.movilizacion.baseLiquidacion;
-    this.liquidation.aportesFet = campo3 * 200;
-    this.liquidation.aportesFQ = campo3 * 50;
-    this.liquidation.aportesAMB = campo3 * 25.65;
+    this.liquidation.aportesFet = campo3 * (this.aportesFetFactor || 0);
+    this.liquidation.aportesFQ = campo3 * (this.aportesFQFactor || 0);
+    this.liquidation.aportesAMB = campo3 * (this.aportesAMBQFactor || 0);
     this.liquidation.total = this.liquidation.aportesFet + this.liquidation.aportesFQ + this.liquidation.aportesAMB;
   }
 
@@ -131,6 +141,10 @@ export class LiquidationComponent implements OnInit {
       const usuarioLogueado = this.authService.getUsuarioLogueado();
       const registroData = {
         usuario: usuarioLogueado,
+        periodo: this.usuario.periodo,
+        reporteEntradas: this.movilizacion.reporteEntradas,
+        noNovedades: this.movilizacion.noNovedades,
+        baseLiquidacion: this.movilizacion.baseLiquidacion,
         aportesFet: this.liquidation.aportesFet,
         aportesFQ: this.liquidation.aportesFQ,
         aportesAMB: this.liquidation.aportesAMB,
@@ -160,7 +174,6 @@ export class LiquidationComponent implements OnInit {
       );
     }
   }
-
 
   generatePDF() {
     this.http.get('assets/invoice-template.html', { responseType: 'text' })

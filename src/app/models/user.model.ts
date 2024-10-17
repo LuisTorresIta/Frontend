@@ -17,13 +17,20 @@ export interface ChangePasswordPayload {
 
 export interface ChangePasswordResponse {
     message: string;
-  }
-  
-  
+}
+
+
 export interface Periodo {
     ID: number;
-    PERIODO: string; 
+    PERIODO: string;
     FECHA_INICIO: string;
     FECHA_FINAL: string;
-  }
-  
+}
+
+export interface Parametrizacion {
+    id: number;
+    parametro: string;
+    valor: number;
+    fechaInicio: Date;
+    fechaFinal: Date;
+}

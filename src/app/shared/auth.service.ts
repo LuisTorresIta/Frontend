@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, catchError, tap, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { Usuario, LoginResponse, ChangePasswordPayload, ChangePasswordResponse, Periodo } from '../models/user.model';
+import { Usuario, LoginResponse, ChangePasswordPayload, ChangePasswordResponse, Periodo, Parametrizacion } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -56,20 +56,12 @@ export class AuthService {
     return this.usuarioSubject.asObservable();
   }
 
-  // getPeriodos(): Observable<any> {
-  //   return this.http.get<any>(`${environment.apiUrl}/periodos`)
-  //     .pipe(
-  //       catchError(this.handleError)
-  //     );
-  // }
-
   getPeriodos(): Observable<Periodo[]> {
     return this.http.get<Periodo[]>(`${environment.apiUrl}/periodos`)
       .pipe(
         catchError(this.handleError)
       );
   }
-  
 
   changePassword(payload: ChangePasswordPayload): Observable<ChangePasswordResponse> {
     return this.http.post<ChangePasswordResponse>(`${environment.apiUrl}/auth/change-password`, payload)
@@ -85,9 +77,15 @@ export class AuthService {
       );
   }
 
-
   saveRecord(data: any): Observable<any> {
     return this.http.post<any>(`${environment.apiUrl}/saveRecord`, data)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  getParametros() {
+    return this.http.get<Parametrizacion[]>(`${environment.apiUrl}/parametros`) // Cambia la URL por la que corresponda a tu API
       .pipe(
         catchError(this.handleError)
       );
@@ -114,7 +112,7 @@ export class AuthService {
       // Otros errores
       errorMessage = `Código de error: ${error.status}\nMensaje: ${error.message}`;
     }
-    
+
     return throwError(() => ({
       status: error.status,
       message: errorMessage
