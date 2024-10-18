@@ -27,8 +27,9 @@ export class LiquidationComponent implements OnInit {
   aportesFetFactor: number | undefined;
   aportesFQFactor: number | undefined;
   aportesAMBQFactor: number | undefined;
-  
+
   usuario = {
+    idTercero: 0,
     empresa: '',
     periodo: ''
   };
@@ -58,9 +59,9 @@ export class LiquidationComponent implements OnInit {
       this.periodos = data;
     });
 
-     this.authService.getParametros().subscribe((data: any) => {
-      console.log(data); 
-      this.porcentajeLimite = data['porcentajeLimite']; 
+    this.authService.getParametros().subscribe((data: any) => {
+      console.log(data);
+      this.porcentajeLimite = data['porcentajeLimite'];
       this.aportesFetFactor = data['aportesFetFactor'];
       this.aportesFQFactor = data['aportesFQFactor'];
       this.aportesAMBQFactor = data['aportesAMBQFactor'];
@@ -71,6 +72,7 @@ export class LiquidationComponent implements OnInit {
     const usuarioLogueado = this.authService.getUsuarioLogueado();
     if (usuarioLogueado) {
       this.usuario.empresa = usuarioLogueado.empresa;
+      this.usuario.idTercero = usuarioLogueado.idTercero;
     }
   }
 
@@ -342,6 +344,7 @@ export class LiquidationComponent implements OnInit {
     let filledTemplate = template;
     filledTemplate = filledTemplate.replace('{{logo}}', this.logo);
     filledTemplate = filledTemplate.replace('{{empresa}}', this.usuario.empresa);
+    filledTemplate = filledTemplate.replace('{{idTercero}}', this.usuario.idTercero.toLocaleString('es-CO'));
     filledTemplate = filledTemplate.replace('{{periodo}}', this.usuario.periodo);
     filledTemplate = filledTemplate.replace('{{invoiceNumber1}}', this.invoiceNumber1);
     filledTemplate = filledTemplate.replace('{{invoiceNumber2}}', this.invoiceNumber2);

@@ -26,7 +26,8 @@ export class AuthService {
             this.isLoggedIn = true;
             this.usuarioLogueado = {
               usuario: response.usuario,
-              empresa: response.empresa
+              empresa: response.empresa,
+              idTercero: Number(response.idTercero)
             };
 
             localStorage.setItem('currentUser', JSON.stringify(this.usuarioLogueado));
@@ -62,6 +63,10 @@ export class AuthService {
         catchError(this.handleError)
       );
   }
+  consultarRegistros(fechaInicio: string, fechaFin: string, idTercero: number): Observable<any> {
+    const body = { fechaInicio, fechaFin, idTercero };
+    return this.http.post<any>(`${environment.apiUrl}/estado-cuenta`, body);
+  }
 
   changePassword(payload: ChangePasswordPayload): Observable<ChangePasswordResponse> {
     return this.http.post<ChangePasswordResponse>(`${environment.apiUrl}/auth/change-password`, payload)
@@ -85,7 +90,14 @@ export class AuthService {
   }
 
   getParametros() {
-    return this.http.get<Parametrizacion[]>(`${environment.apiUrl}/parametros`) // Cambia la URL por la que corresponda a tu API
+    return this.http.get<Parametrizacion[]>(`${environment.apiUrl}/parametros`)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  validateAndCalculate(data: any): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}/calcular-liquidacion`, data)
       .pipe(
         catchError(this.handleError)
       );

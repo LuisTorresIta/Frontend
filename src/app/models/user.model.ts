@@ -1,12 +1,14 @@
 export interface Usuario {
     usuario: string;
     empresa: string;
+    idTercero: number;
 }
 
 export interface LoginResponse {
     message: string;
     usuario: string;
-    empresa: string
+    empresa: string;
+    idTercero: string;
 }
 
 export interface ChangePasswordPayload {
@@ -18,7 +20,6 @@ export interface ChangePasswordPayload {
 export interface ChangePasswordResponse {
     message: string;
 }
-
 
 export interface Periodo {
     ID: number;
