@@ -83,7 +83,7 @@ export class EstadoDeCuentaComponent implements OnInit {
 
         const registrosHTML = this.registrosFiltrados.map(item => {
           const totalFormatted = Number(item.VALOR_TOTAL).toLocaleString('es-CO', { style: 'currency', currency: 'COP' });
-          const valorPagadoFormatted = Number(item.VALOR_PAGADO).toLocaleString('es-CO', { style: 'currency', currency: 'COP' });
+          const valorPagadoFormatted = item.VALOR_PAGADO ? Number(item.VALOR_PAGADO).toLocaleString('es-CO', { style: 'currency', currency: 'COP' }) : '$ 0';
           return `
           <tr>
            <td style="padding: 0.03in; text-align: center;">${item.PERIODO}</td>
@@ -109,21 +109,43 @@ export class EstadoDeCuentaComponent implements OnInit {
     container.innerHTML = template;
     document.body.appendChild(container);
 
-    html2canvas(container, { scale: 2 }).then(canvas => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const marginX = 15;
+    const marginY = 15;
+    const pageHeight = 297 - marginY * 2;
 
-      const marginX = 15;
-      const marginY = 15;
-      const pageWidth = 210 - marginX * 2;
-      const pageHeight = 297 - marginY * 2;
+    html2canvas(container, { scale: 2 }).then(canvas => {
       const imgWidth = canvas.width;
       const imgHeight = canvas.height;
-      const scaleFactor = Math.min(pageWidth / imgWidth, pageHeight / imgHeight);
-      const finalWidth = imgWidth * scaleFactor;
-      const finalHeight = imgHeight * scaleFactor;
+      const pageWidth = 210 - marginX * 2;
 
-      pdf.addImage(imgData, 'PNG', marginX, marginY, finalWidth, finalHeight);
+      const imgPageHeight = (canvas.height * pageWidth) / canvas.width;
+
+      let position = 0;
+      let remainingHeight = imgHeight;
+
+      while (remainingHeight > 0) {
+        const partHeight = Math.min(pageHeight * canvas.width / pageWidth, remainingHeight);
+        const canvasPart = document.createElement('canvas');
+        canvasPart.width = imgWidth;
+        canvasPart.height = partHeight;
+
+        const context = canvasPart.getContext('2d');
+        if (context) {
+          context.drawImage(canvas, 0, position, imgWidth, partHeight, 0, 0, imgWidth, partHeight);
+        }
+
+        const imgData = canvasPart.toDataURL('image/png');
+        pdf.addImage(imgData, 'PNG', marginX, marginY, pageWidth, (partHeight * pageWidth) / imgWidth);
+
+        remainingHeight -= partHeight;
+        position += partHeight;
+
+        if (remainingHeight > 0) {
+          pdf.addPage();
+        }
+      }
+
       const pdfBlob = pdf.output('blob');
       const blobUrl = URL.createObjectURL(pdfBlob);
 
@@ -135,4 +157,7 @@ export class EstadoDeCuentaComponent implements OnInit {
       document.body.removeChild(container);
     });
   }
+
+
+
 }
