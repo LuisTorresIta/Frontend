@@ -1,21 +1,22 @@
-.estado-cuenta-container {   
-  margin-top: 80px; 
+.estado-cuenta-container {
+  margin-top: 80px;
   padding: 20px;
   display: flex;
-  flex-wrap: wrap; 
+  flex-wrap: wrap;
   align-items: center;
   gap: 20px;
 }
 
 .empresa-info {
-  font-size: 1.2rem; 
-  flex: 1 1 200px; 
+  font-size: 1.3rem;
+  font-weight: bold;
+  flex: 1 1 200px;
 }
 
 .fechas-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px; 
+  gap: 20px;
   align-items: center;
 }
 
@@ -24,15 +25,11 @@
   margin-right: 10px;
 }
 
-select {
-  padding: 8px;
-  flex: 1; 
-}
-
 .estado-cuenta-table-container {
   margin-top: 20px;
   padding: 10px;
-  overflow-x: auto; 
+  max-height: 602px;
+  overflow-y: auto;
 }
 
 .estado-cuenta-table {
@@ -40,7 +37,8 @@ select {
   border-collapse: collapse;
 }
 
-.estado-cuenta-table th, .estado-cuenta-table td {
+.estado-cuenta-table th,
+.estado-cuenta-table td {
   border: 1px solid #ddd;
   padding: 8px;
   text-align: left;
@@ -53,17 +51,17 @@ select {
 }
 
 .estado-cuenta-table td {
-  text-align: center; 
+  text-align: center;
 }
 
 .consultar-btn {
-  background-color: #6ab7f9; 
+  background-color: #6ab7f9;
   color: white;
-  border: none; 
-  border-radius: 5px; 
+  border: none;
+  border-radius: 5px;
   padding: 10px 15px;
   cursor: pointer;
-  transition: background-color 0.3s; 
+  transition: background-color 0.3s;
 }
 
 .consultar-btn:hover {
@@ -71,77 +69,78 @@ select {
 }
 
 .no-data-message {
-  text-align: center; 
+  text-align: center;
   color: #555;
-  font-size: 1rem; 
-  padding: 20px; 
+  font-size: 1rem;
+  padding: 20px;
 }
 
 .pagination-container {
   display: flex;
-  justify-content: flex-end; 
-  margin-top: 20px;
+  justify-content: flex-end;
+  margin-top: 10px;
 }
 
 .pagination {
   display: flex;
-  align-items: center; 
+  align-items: center;
 }
 
 .pagination button {
-  background-color: #4caf50; 
+  background-color: #4caf50;
   color: white;
   border: none;
   border-radius: 5px;
-  padding: 8px 12px; 
+  padding: 8px 12px;
   margin: 0 5px;
   cursor: pointer;
-  transition: background-color 0.3s; 
+  transition: background-color 0.3s;
+}
+
+.pagination button:hover {
+  background-color: #45a049;
+}
+
+.pagination button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  margin: 0 10px;
+  font-weight: bold;
 }
 
 .fecha-input {
   padding: 6px;
   border: 2px solid #ddd;
   border-radius: 5px;
-  font-size: 16px; 
-  transition: border-color 0.3s; 
+  font-size: 16px;
+  transition: border-color 0.3s;
 }
 
 .fecha-input:focus {
-  border-color: #0056b3; 
+  border-color: #0056b3;
   outline: none;
-}
-
-.pagination button:hover {
-  background-color: #45a049; 
-}
-
-.pagination button:disabled {
-  background-color: #ccc; 
-  cursor: not-allowed; 
-}
-
-.pagination span {
-  margin: 0 10px;
-  font-weight: bold; 
 }
 
 @media (max-width: 600px) {
   .estado-cuenta-container {
-      flex-direction: column;
-      align-items: flex-start;
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .fechas-container {
-      flex-direction: column;
-      gap: 10px; 
+    flex-direction: column;
+    gap: 10px;
   }
 
   .empresa-info {
-      margin-bottom: 10px; 
+    margin-bottom: 10px;
   }
 
-  .estado-cuenta-table th, .estado-cuenta-table td {
-      font-size: 0.9rem;
+  .estado-cuenta-table th,
+  .estado-cuenta-table td {
+    font-size: 0.9rem;
   }
 }

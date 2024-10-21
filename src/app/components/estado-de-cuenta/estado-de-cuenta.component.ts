@@ -19,7 +19,7 @@ export class EstadoDeCuentaComponent implements OnInit {
   fechaInicioSeleccionada: string | null = null;
   fechaFinalSeleccionada: string | null = null;
   periodo: string = '';
-  registrosPorPagina: number = 2;
+  registrosPorPagina: number = 50;
   paginaActual: number = 1;
 
   constructor(private http: HttpClient, private authService: AuthService) { }
