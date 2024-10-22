@@ -35,7 +35,13 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngIf="registrosFiltrados.length === 0">
+      <tr *ngIf="loading">
+        <td colspan="6" class="loading-spinner">
+          <div class="spinner"></div>
+          <span class="loading-text">Cargando...</span>
+        </td>
+      </tr>
+      <tr *ngIf="!loading && registrosFiltrados.length === 0">
         <td colspan="6" class="no-data-message">No hay datos para mostrar</td>
       </tr>
       <tr

@@ -13,10 +13,10 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./estado-de-cuenta.component.css']
 })
 export class EstadoDeCuentaComponent implements OnInit {
+  loading: boolean = false;
   currentUser: any;
   fechasDisponibles: { fechaInicio: string; fechaFinal: string; periodo: string }[] = [];
   registrosFiltrados: any[] = [];
-
   fechaInicioSeleccionada: string | null = null;
   fechaFinalSeleccionada: string | null = null;
   periodo: string = '';
@@ -59,16 +59,21 @@ export class EstadoDeCuentaComponent implements OnInit {
     console.log('Fechas seleccionadas:', this.fechaInicioSeleccionada, this.fechaFinalSeleccionada);
     console.log('ID del tercero:', idTercero);
 
+    this.loading = true;
+    this.registrosFiltrados = [];
+
     this.authService.consultarRegistros(this.fechaInicioSeleccionada, this.fechaFinalSeleccionada, idTercero).subscribe({
       next: (response) => {
         console.log('Registros obtenidos:', response);
         this.registrosFiltrados = response.detalles;
+        this.loading = false;
       },
       error: (err) => {
         console.error('Error al consultar registros:', err);
         this.toastr.error('Error al consultar registros', 'Error', {
           toastClass: 'ngx-toastr custom-toast'
         });
+        this.loading = false;
       }
     });
   }
