@@ -124,6 +124,16 @@
   outline: none;
 }
 
+::ng-deep .custom-toast .toast-title {
+  font-size: 30px;
+  font-weight: normal !important;
+  margin-bottom: 10px !important;
+}
+
+::ng-deep .custom-toast .toast-message {
+  font-size: 18px !important;
+}
+
 @media (max-width: 600px) {
   .estado-cuenta-container {
     flex-direction: column;
